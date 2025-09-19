@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savings Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c5364;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .description {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        label {
+            font-weight: 500;
+            color: #444;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .value-display {
+            font-weight: 600;
+            color: #2c5364;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e0e0e0;
+            outline: none;
+            border-radius: 4px;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #2c5364;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #203a43;
+            transform: scale(1.1);
+        }
+        
+        input[type="number"] {
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus {
+            border-color: #2c5364;
+            outline: none;
+        }
+        
+        select {
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background-color: white;
+        }
+        
+        select:focus {
+            border-color: #2c5364;
+            outline: none;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .calculate-btn {
+            background-color: #2c5364;
+            color: white;
+        }
+        
+        .calculate-btn:hover {
+            background-color: #203a43;
+            transform: translateY(-2px);
+        }
+        
+        .clear-btn {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .clear-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .results {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .result-value {
+            font-weight: 600;
+            color: #2c5364;
+            font-size: 18px;
+        }
+        
+        .result-highlight {
+            background-color: #2c5364;
+            color: white;
+        }
+        
+        .result-highlight .result-value {
+            color: white;
+            font-size: 20px;
+        }
+        
+        .breakdown {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .breakdown h3 {
+            color: #2c5364;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breakdown-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .chart-container {
+            margin-top: 20px;
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            background-color: #2c5364;
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-width: 40px;
+        }
+        
+        .chart-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .chart-value {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c5364;
+        }
+        
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .chart-container {
+                flex-direction: column;
+                height: 300px;
+                align-items: center;
+            }
+            
+            .chart-bar {
+                width: 50px;
+                height: 100% !important;
+            }
+            
+            .chart-label {
+                bottom: -40px;
+                transform: rotate(-45deg);
+                transform-origin: top left;
+                text-align: left;
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Savings Calculator</h1>
+        <p class="description">Calculate how your savings can grow over time with compound interest</p>
+        
+        <div class="calculator">
+            <div class="input-group">
+                <label for="principal">
+                    <span>Principal Amount ($)</span>
+                    <span class="value-display" id="principal-value">$10,000</span>
+                </label>
+                <input type="range" id="principal" min="100" max="100000" step="100" value="10000">
+                <input type="number" id="principal-input" min="100" max="1000000" step="100" value="10000">
+            </div>
+            
+            <div class="input-group">
+                <label for="interest-rate">
+                    <span>Annual Interest Rate (%)</span>
+                    <span class="value-display" id="interest-rate-value">5%</span>
+                </label>
+                <input type="range" id="interest-rate" min="0.1" max="20" step="0.1" value="5">
+                <input type="number" id="interest-rate-input" min="0.1" max="20" step="0.1" value="5">
+            </div>
+            
+            <div class="input-group">
+                <label for="time">
+                    <span>Time Period (years)</span>
+                    <span class="value-display" id="time-value">10 years</span>
+                </label>
+                <input type="range" id="time" min="1" max="30" step="1" value="10">
+                <input type="number" id="time-input" min="1" max="30" step="1" value="10">
+            </div>
+            
+            <div class="input-group">
+                <label for="compound-frequency">Compounding Frequency</label>
+                <select id="compound-frequency">
+                    <option value="1">Annually</option>
+                    <option value="2">Semi-annually</option>
+                    <option value="4">Quarterly</option>
+                    <option value="12" selected>Monthly</option>
+                    <option value="365">Daily</option>
+                </select>
+            </div>
+            
+            <div class="button-group">
+                <button class="calculate-btn" onclick="calculateSavings()">Calculate Savings</button>
+                <button class="clear-btn" onclick="clearFields()">Clear</button>
+            </div>
+            
+            <div class="results">
+                <div class="result-item result-highlight">
+                    <span>Final Savings Amount:</span>
+                    <span class="result-value" id="final-amount">$16,470.09</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>Total Interest Earned:</span>
+                    <span class="result-value" id="total-interest">$6,470.09</span>
+                </div>
+            </div>
+            
+            <div class="breakdown">
+                <h3>Projection Over Time</h3>
+                <div class="chart-container" id="chart">
+                    <!-- Chart will be generated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set up slider and input synchronization
+        const principalSlider = document.getElementById('principal');
+        const principalInput = document.getElementById('principal-input');
+        const principalValue = document.getElementById('principal-value');
+        
+        const interestRateSlider = document.getElementById('interest-rate');
+        const interestRateInput = document.getElementById('interest-rate-input');
+        const interestRateValue = document.getElementById('interest-rate-value');
+        
+        const timeSlider = document.getElementById('time');
+        const timeInput = document.getElementById('time-input');
+        const timeValue = document.getElementById('time-value');
+        
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+        
+        // Update principal display
+        function updatePrincipal(value) {
+            principalValue.textContent = formatCurrency(value);
+            calculateSavings();
+        }
+        
+        // Update interest rate display
+        function updateInterestRate(value) {
+            interestRateValue.textContent = value + '%';
+            calculateSavings();
+        }
+        
+        // Update time display
+        function updateTime(value) {
+            timeValue.textContent = value + ' year' + (value > 1 ? 's' : '');
+            calculateSavings();
+        }
+        
+        // Sync sliders and inputs
+        principalSlider.addEventListener('input', function() {
+            principalInput.value = this.value;
+            updatePrincipal(this.value);
+        });
+        
+        principalInput.addEventListener('input', function() {
+            principalSlider.value = this.value;
+            updatePrincipal(this.value);
+        });
+        
+        interestRateSlider.addEventListener('input', function() {
+            interestRateInput.value = this.value;
+            updateInterestRate(this.value);
+        });
+        
+        interestRateInput.addEventListener('input', function() {
+            interestRateSlider.value = this.value;
+            updateInterestRate(this.value);
+        });
+        
+        timeSlider.addEventListener('input', function() {
+            timeInput.value = this.value;
+            updateTime(this.value);
+        });
+        
+        timeInput.addEventListener('input', function() {
+            timeSlider.value = this.value;
+            updateTime(this.value);
+        });
+        
+        // Calculate compound interest
+        function calculateSavings() {
+            const principal = parseFloat(principalInput.value);
+            const interestRate = parseFloat(interestRateInput.value) / 100; // Convert to decimal
+            const time = parseFloat(timeInput.value);
+            const compoundFrequency = parseInt(document.getElementById('compound-frequency').value);
+            
+            if (isNaN(principal) || isNaN(interestRate) || isNaN(time) || 
+                principal <= 0 || interestRate <= 0 || time <= 0) {
+                return;
+            }
+            
+            // Compound interest formula: A = P(1 + r/n)^(nt)
+            const finalAmount = principal * Math.pow(1 + interestRate/compoundFrequency, compoundFrequency * time);
+            const totalInterest = finalAmount - principal;
+            
+            // Update results
+            document.getElementById('final-amount').textContent = formatCurrency(finalAmount);
+            document.getElementById('total-interest').textContent = formatCurrency(totalInterest);
+            
+            // Generate chart
+            generateChart(principal, interestRate, time, compoundFrequency);
+        }
+        
+        // Generate projection chart
+        function generateChart(principal, interestRate, time, compoundFrequency) {
+            const chartContainer = document.getElementById('chart');
+            chartContainer.innerHTML = '';
+            
+            // Calculate values for each year
+            for (let year = 1; year <= time; year++) {
+                const amount = principal * Math.pow(1 + interestRate/compoundFrequency, compoundFrequency * year);
+                const interest = amount - principal;
+                
+                // Create bar
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                
+                // Calculate height (max 180px)
+                const maxHeight = 180;
+                const height = Math.min((amount / (principal * 3)) * maxHeight, maxHeight);
+                bar.style.height = height + 'px';
+                
+                // Add value label
+                const valueLabel = document.createElement('div');
+                valueLabel.className = 'chart-value';
+                valueLabel.textContent = formatCurrency(amount);
+                bar.appendChild(valueLabel);
+                
+                // Add year label
+                const yearLabel = document.createElement('div');
+                yearLabel.className = 'chart-label';
+                yearLabel.textContent = 'Year ' + year;
+                bar.appendChild(yearLabel);
+                
+                chartContainer.appendChild(bar);
+            }
+        }
+        
+        function clearFields() {
+            principalInput.value = 10000;
+            principalSlider.value = 10000;
+            updatePrincipal(10000);
+            
+            interestRateInput.value = 5;
+            interestRateSlider.value = 5;
+            updateInterestRate(5);
+            
+            timeInput.value = 10;
+            timeSlider.value = 10;
+            updateTime(10);
+            
+            document.getElementById('compound-frequency').value = 12;
+            
+            calculateSavings();
+        }
+        
+        // Initialize calculator
+        calculateSavings();
+    </script>
+</body>
+</html>

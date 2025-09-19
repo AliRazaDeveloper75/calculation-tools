@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profit/Loss Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .description {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        label {
+            font-weight: 500;
+            color: #444;
+            font-size: 16px;
+        }
+        
+        input {
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #2c5364;
+            outline: none;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .calculate-btn {
+            background-color: #2c5364;
+            color: white;
+        }
+        
+        .calculate-btn:hover {
+            background-color: #203a43;
+            transform: translateY(-2px);
+        }
+        
+        .clear-btn {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .clear-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .results {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .result-value {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .profit {
+            background-color: #d5f5e3;
+            color: #27ae60;
+        }
+        
+        .profit .result-value {
+            color: #27ae60;
+        }
+        
+        .loss {
+            background-color: #fadbd8;
+            color: #c0392b;
+        }
+        
+        .loss .result-value {
+            color: #c0392b;
+        }
+        
+        .neutral {
+            background-color: #fdebd0;
+            color: #e67e22;
+        }
+        
+        .neutral .result-value {
+            color: #e67e22;
+        }
+        
+        .summary {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .summary.profit {
+            background-color: #d5f5e3;
+            color: #27ae60;
+        }
+        
+        .summary.loss {
+            background-color: #fadbd8;
+            color: #c0392b;
+        }
+        
+        .summary.neutral {
+            background-color: #fdebd0;
+            color: #e67e22;
+        }
+        
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Profit/Loss Calculator</h1>
+        <p class="description">Calculate your profit or loss based on cost and selling price</p>
+        
+        <div class="calculator">
+            <div class="input-group">
+                <label for="cost-price">Cost Price ($)</label>
+                <input type="number" id="cost-price" placeholder="Enter cost price" min="0" step="0.01">
+            </div>
+            
+            <div class="input-group">
+                <label for="selling-price">Selling Price ($)</label>
+                <input type="number" id="selling-price" placeholder="Enter selling price" min="0" step="0.01">
+            </div>
+            
+            <div class="button-group">
+                <button class="calculate-btn" onclick="calculateProfitLoss()">Calculate</button>
+                <button class="clear-btn" onclick="clearFields()">Clear</button>
+            </div>
+            
+            <div class="results">
+                <div class="result-item">
+                    <span>Cost Price:</span>
+                    <span class="result-value" id="cost-display">$0.00</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>Selling Price:</span>
+                    <span class="result-value" id="selling-display">$0.00</span>
+                </div>
+                
+                <div class="result-item" id="result-amount">
+                    <span>Profit/Loss Amount:</span>
+                    <span class="result-value" id="amount">$0.00</span>
+                </div>
+                
+                <div class="result-item" id="result-percentage">
+                    <span>Profit/Loss Percentage:</span>
+                    <span class="result-value" id="percentage">0%</span>
+                </div>
+            </div>
+            
+            <div class="summary neutral" id="summary">
+                No profit, no loss
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2
+            }).format(amount);
+        }
+        
+        function calculateProfitLoss() {
+            const costPrice = parseFloat(document.getElementById('cost-price').value);
+            const sellingPrice = parseFloat(document.getElementById('selling-price').value);
+            
+            if (isNaN(costPrice) || costPrice <= 0) {
+                alert('Please enter a valid cost price');
+                return;
+            }
+            
+            if (isNaN(sellingPrice) || sellingPrice < 0) {
+                alert('Please enter a valid selling price');
+                return;
+            }
+            
+            const amount = sellingPrice - costPrice;
+            const percentage = (Math.abs(amount) / costPrice) * 100;
+            
+            // Update displays
+            document.getElementById('cost-display').textContent = formatCurrency(costPrice);
+            document.getElementById('selling-display').textContent = formatCurrency(sellingPrice);
+            document.getElementById('amount').textContent = formatCurrency(Math.abs(amount));
+            document.getElementById('percentage').textContent = percentage.toFixed(2) + '%';
+            
+            // Get result elements
+            const resultAmount = document.getElementById('result-amount');
+            const resultPercentage = document.getElementById('result-percentage');
+            const summary = document.getElementById('summary');
+            
+            // Remove previous classes
+            resultAmount.classList.remove('profit', 'loss', 'neutral');
+            resultPercentage.classList.remove('profit', 'loss', 'neutral');
+            summary.classList.remove('profit', 'loss', 'neutral');
+            
+            // Apply appropriate styling based on profit/loss
+            if (amount > 0) {
+                // Profit
+                resultAmount.classList.add('profit');
+                resultPercentage.classList.add('profit');
+                summary.classList.add('profit');
+                document.getElementById('amount').textContent = formatCurrency(amount);
+                summary.textContent = `You made a profit of ${formatCurrency(amount)} (${percentage.toFixed(2)}%)`;
+            } else if (amount < 0) {
+                // Loss
+                resultAmount.classList.add('loss');
+                resultPercentage.classList.add('loss');
+                summary.classList.add('loss');
+                document.getElementById('amount').textContent = formatCurrency(Math.abs(amount));
+                summary.textContent = `You incurred a loss of ${formatCurrency(Math.abs(amount))} (${percentage.toFixed(2)}%)`;
+            } else {
+                // No profit, no loss
+                resultAmount.classList.add('neutral');
+                resultPercentage.classList.add('neutral');
+                summary.classList.add('neutral');
+                summary.textContent = 'No profit, no loss';
+            }
+        }
+        
+        function clearFields() {
+            document.getElementById('cost-price').value = '';
+            document.getElementById('selling-price').value = '';
+            
+            document.getElementById('cost-display').textContent = '$0.00';
+            document.getElementById('selling-display').textContent = '$0.00';
+            document.getElementById('amount').textContent = '$0.00';
+            document.getElementById('percentage').textContent = '0%';
+            
+            const resultAmount = document.getElementById('result-amount');
+            const resultPercentage = document.getElementById('result-percentage');
+            const summary = document.getElementById('summary');
+            
+            resultAmount.classList.remove('profit', 'loss', 'neutral');
+            resultPercentage.classList.remove('profit', 'loss', 'neutral');
+            summary.classList.remove('profit', 'loss', 'neutral');
+            
+            summary.classList.add('neutral');
+            summary.textContent = 'No profit, no loss';
+        }
+        
+        // Calculate when inputs change
+        document.getElementById('cost-price').addEventListener('input', calculateProfitLoss);
+        document.getElementById('selling-price').addEventListener('input', calculateProfitLoss);
+        
+        // Allow pressing Enter to calculate
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calculateProfitLoss();
+            }
+        });
+    </script>
+</body>
+</html>

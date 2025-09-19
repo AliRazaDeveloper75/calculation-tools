@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percentage Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .description {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        label {
+            font-weight: 500;
+            color: #444;
+            font-size: 16px;
+        }
+        
+        input {
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #6a11cb;
+            outline: none;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .calculate-btn {
+            background-color: #6a11cb;
+            color: white;
+        }
+        
+        .calculate-btn:hover {
+            background-color: #5a0fb8;
+            transform: translateY(-2px);
+        }
+        
+        .clear-btn {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .clear-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .highlight {
+            color: #6a11cb;
+            font-weight: 700;
+        }
+        
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Percentage Calculator</h1>
+        <p class="description">Calculate percentages easily with this simple tool</p>
+        
+        <div class="calculator">
+            <div class="input-group">
+                <label for="value">What is</label>
+                <input type="number" id="value" placeholder="Enter value" min="0">
+            </div>
+            
+            <div class="input-group">
+                <label for="percentage">% of</label>
+                <input type="number" id="percentage" placeholder="Enter percentage" min="0" max="100">
+            </div>
+            
+            <div class="button-group">
+                <button class="calculate-btn" onclick="calculate()">Calculate</button>
+                <button class="clear-btn" onclick="clearFields()">Clear</button>
+            </div>
+            
+            <div class="result" id="result">
+                Result will appear here
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const value = parseFloat(document.getElementById('value').value);
+            const percentage = parseFloat(document.getElementById('percentage').value);
+            
+            if (isNaN(value) || isNaN(percentage)) {
+                document.getElementById('result').innerHTML = 'Please enter valid numbers in both fields';
+                return;
+            }
+            
+            if (percentage < 0 || percentage > 100) {
+                document.getElementById('result').innerHTML = 'Percentage must be between 0 and 100';
+                return;
+            }
+            
+            const result = (value * percentage) / 100;
+            
+            document.getElementById('result').innerHTML = 
+                `<span class="highlight">${percentage}%</span> of <span class="highlight">${value}</span> is <span class="highlight">${result.toFixed(2)}</span>`;
+        }
+        
+        function clearFields() {
+            document.getElementById('value').value = '';
+            document.getElementById('percentage').value = '';
+            document.getElementById('result').innerHTML = 'Result will appear here';
+        }
+        
+        // Allow pressing Enter to calculate
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calculate();
+            }
+        });
+    </script>
+</body>
+</html>

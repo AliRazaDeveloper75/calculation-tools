@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compound Interest Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c5364;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .description {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        label {
+            font-weight: 500;
+            color: #444;
+            font-size: 16px;
+        }
+        
+        input, select {
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: #2c5364;
+            outline: none;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .calculate-btn {
+            background-color: #2c5364;
+            color: white;
+        }
+        
+        .calculate-btn:hover {
+            background-color: #203a43;
+            transform: translateY(-2px);
+        }
+        
+        .clear-btn {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .clear-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .results {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .result-card {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .result-card h3 {
+            color: #2c5364;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .result-value {
+            font-weight: 600;
+            color: #2c5364;
+            font-size: 24px;
+        }
+        
+        .chart-container {
+            margin-top: 30px;
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, #2c5364 0%, #203a43 100%);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-width: 40px;
+        }
+        
+        .chart-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .chart-value {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c5364;
+        }
+        
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .summary h3 {
+            color: #2c5364;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .input-section, .results {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                flex-direction: column;
+                height: 300px;
+                align-items: center;
+            }
+            
+            .chart-bar {
+                width: 50px;
+                height: 100% !important;
+            }
+            
+            .chart-label {
+                bottom: -40px;
+                transform: rotate(-45deg);
+                transform-origin: top left;
+                text-align: left;
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Compound Interest Calculator</h1>
+        <p class="description">See how your money can grow with compound interest</p>
+        
+        <div class="calculator">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="principal">Initial Investment ($)</label>
+                    <input type="number" id="principal" placeholder="Enter amount" min="0" step="100" value="10000">
+                </div>
+                
+                <div class="input-group">
+                    <label for="rate">Annual Interest Rate (%)</label>
+                    <input type="number" id="rate" placeholder="Enter rate" min="0" step="0.1" value="5">
+                </div>
+                
+                <div class="input-group">
+                    <label for="time">Time Period (years)</label>
+                    <input type="number" id="time" placeholder="Enter years" min="1" max="50" step="1" value="10">
+                </div>
+                
+                <div class="input-group">
+                    <label for="contribution">Monthly Contribution ($)</label>
+                    <input type="number" id="contribution" placeholder="Enter amount" min="0" step="10" value="100">
+                </div>
+                
+                <div class="input-group">
+                    <label for="compound-frequency">Compound Frequency</label>
+                    <select id="compound-frequency">
+                        <option value="1">Annually</option>
+                        <option value="2">Semi-annually</option>
+                        <option value="4">Quarterly</option>
+                        <option value="12" selected>Monthly</option>
+                        <option value="365">Daily</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="calculate-btn" onclick="calculateCompoundInterest()">Calculate</button>
+                <button class="clear-btn" onclick="clearFields()">Clear</button>
+            </div>
+            
+            <div class="results">
+                <div class="result-card">
+                    <h3>Final Balance</h3>
+                    <div class="result-value" id="final-balance">$16,470.09</div>
+                </div>
+                
+                <div class="result-card">
+                    <h3>Total Interest</h3>
+                    <div class="result-value" id="total-interest">$6,470.09</div>
+                </div>
+                
+                <div class="result-card">
+                    <h3>Total Contributions</h3>
+                    <div class="result-value" id="total-contributions">$12,000.00</div>
+                </div>
+                
+                <div class="result-card">
+                    <h3>Interest Earned</h3>
+                    <div class="result-value" id="interest-earned">$4,470.09</div>
+                </div>
+            </div>
+            
+            <div class="chart-container" id="chart">
+                <!-- Chart will be generated here -->
+            </div>
+            
+            <div class="summary">
+                <h3>Yearly Breakdown</h3>
+                <div id="yearly-breakdown">
+                    <!-- Yearly breakdown will be generated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+        
+        function calculateCompoundInterest() {
+            const principal = parseFloat(document.getElementById('principal').value);
+            const rate = parseFloat(document.getElementById('rate').value) / 100; // Convert to decimal
+            const time = parseInt(document.getElementById('time').value);
+            const contribution = parseFloat(document.getElementById('contribution').value);
+            const compoundFrequency = parseInt(document.getElementById('compound-frequency').value);
+            
+            if (isNaN(principal) || principal < 0) {
+                alert('Please enter a valid initial investment');
+                return;
+            }
+            
+            if (isNaN(rate) || rate <= 0) {
+                alert('Please enter a valid interest rate');
+                return;
+            }
+            
+            if (isNaN(time) || time <= 0) {
+                alert('Please enter a valid time period');
+                return;
+            }
+            
+            if (isNaN(contribution) || contribution < 0) {
+                alert('Please enter a valid contribution amount');
+                return;
+            }
+            
+            // Calculate compound interest with regular contributions
+            let balance = principal;
+            let totalContributions = principal;
+            const yearlyData = [];
+            
+            for (let year = 1; year <= time; year++) {
+                for (let period = 0; period < compoundFrequency; period++) {
+                    // Add contribution at the beginning of each period (except first)
+                    if (year > 1 || period > 0) {
+                        balance += contribution * (12 / compoundFrequency);
+                        totalContributions += contribution * (12 / compoundFrequency);
+                    }
+                    
+                    // Apply compound interest
+                    balance *= (1 + rate / compoundFrequency);
+                }
+                
+                yearlyData.push({
+                    year: year,
+                    balance: balance,
+                    contributions: totalContributions,
+                    interest: balance - totalContributions
+                });
+            }
+            
+            const totalInterest = balance - totalContributions;
+            
+            // Update results
+            document.getElementById('final-balance').textContent = formatCurrency(balance);
+            document.getElementById('total-interest').textContent = formatCurrency(balance - principal);
+            document.getElementById('total-contributions').textContent = formatCurrency(totalContributions);
+            document.getElementById('interest-earned').textContent = formatCurrency(totalInterest);
+            
+            // Generate chart
+            generateChart(yearlyData);
+            
+            // Generate yearly breakdown
+            generateYearlyBreakdown(yearlyData);
+        }
+        
+        function generateChart(yearlyData) {
+            const chartContainer = document.getElementById('chart');
+            chartContainer.innerHTML = '';
+            
+            // Find max value for scaling
+            const maxBalance = Math.max(...yearlyData.map(data => data.balance));
+            
+            yearlyData.forEach(data => {
+                // Create bar
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                
+                // Calculate height (max 180px)
+                const maxHeight = 180;
+                const height = (data.balance / maxBalance) * maxHeight;
+                bar.style.height = height + 'px';
+                
+                // Add value label
+                const valueLabel = document.createElement('div');
+                valueLabel.className = 'chart-value';
+                valueLabel.textContent = formatCurrency(data.balance);
+                bar.appendChild(valueLabel);
+                
+                // Add year label
+                const yearLabel = document.createElement('div');
+                yearLabel.className = 'chart-label';
+                yearLabel.textContent = 'Year ' + data.year;
+                bar.appendChild(yearLabel);
+                
+                chartContainer.appendChild(bar);
+            });
+        }
+        
+        function generateYearlyBreakdown(yearlyData) {
+            const breakdownContainer = document.getElementById('yearly-breakdown');
+            breakdownContainer.innerHTML = '';
+            
+            // Add header
+            const header = document.createElement('div');
+            header.className = 'summary-item';
+            header.style.fontWeight = '600';
+            header.innerHTML = `
+                <span>Year</span>
+                <span>Balance</span>
+                <span>Contributions</span>
+                <span>Interest</span>
+            `;
+            breakdownContainer.appendChild(header);
+            
+            // Add yearly data
+            yearlyData.forEach(data => {
+                const item = document.createElement('div');
+                item.className = 'summary-item';
+                item.innerHTML = `
+                    <span>${data.year}</span>
+                    <span>${formatCurrency(data.balance)}</span>
+                    <span>${formatCurrency(data.contributions)}</span>
+                    <span>${formatCurrency(data.interest)}</span>
+                `;
+                breakdownContainer.appendChild(item);
+            });
+        }
+        
+        function clearFields() {
+            document.getElementById('principal').value = '10000';
+            document.getElementById('rate').value = '5';
+            document.getElementById('time').value = '10';
+            document.getElementById('contribution').value = '100';
+            document.getElementById('compound-frequency').value = '12';
+            
+            calculateCompoundInterest();
+        }
+        
+        // Calculate on input change
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('input', calculateCompoundInterest);
+        });
+        
+        // Initialize calculator
+        calculateCompoundInterest();
+    </script>
+</body>
+</html>

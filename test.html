@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculation Tools Section</title>
+
+  <!-- Google font for nice look -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin:0;
+      padding:20px;
+      background:#f5f5f5;
+      font-family:'Inter', sans-serif;
+      color:#333;
+    }
+
+    .tools-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+      gap:16px;
+    }
+
+    .card {
+      background:#fff;
+      border-radius:12px;
+      padding:16px;
+      box-shadow:0 4px 8px rgba(0,0,0,0.06);
+      transition:transform .2s;
+    }
+
+    .card:hover {
+      transform:translateY(-4px);
+    }
+
+    .card h3 {
+      margin:0 0 6px;
+      font-size:16px;
+      color:#222;
+    }
+
+    .card p {
+      margin:0;
+      font-size:14px;
+      color:#555;
+    }
+
+    .meta {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:10px;
+    }
+
+    .chip {
+      font-size:12px;
+      padding:4px 8px;
+      border-radius:999px;
+      background:#f0f0f0;
+      color:#333;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Calculation Tools</h1>
+
+  <section class="tools-grid">
+    <article class="card">
+      <div>
+        <h3>Simple Calculator</h3>
+        <p>Add, subtract, multiply, divide — quick arithmetic.</p>
+      </div>
+      <div class="meta">
+        <span class="chip">Quick</span>
+        <small>Simple UI</small>
+      </div>
+    </article>
+
+    <article class="card">
+      <div>
+        <h3>Percentage Calculator</h3>
+        <p>Find X% of Y, or what percentage one number is of another.</p>
+      </div>
+      <div class="meta">
+        <span class="chip">Percent</span>
+        <small>Common</small>
+      </div>
+    </article>
+
+    <article class="card">
+      <div>
+        <h3>Discount Price</h3>
+        <p>Compute discounted price from original and discount%.</p>
+      </div>
+      <div class="meta">
+        <span class="chip">Shopping</span>
+        <small>Retail</small>
+      </div>
+    </article>
+
+    <article class="card">
+      <div>
+        <h3>Tip Calculator</h3>
+        <p>Calculate tip % and split the bill among people.</p>
+      </div>
+      <div class="meta">
+        <span class="chip">Dining</span>
+        <small>Split</small>
+      </div>
+    </article>
+
+    <article class="card">
+      <div>
+        <h3>BMI Calculator</h3>
+        <p>Height + weight → BMI value + category.</p>
+      </div>
+      <div class="meta">
+        <span class="chip">Health</span>
+        <small>Metric/Imperial</small>
+      </div>
+    </article>
+
+    <article class="card">
+      <div>
+        <h3>Age Calculator</h3>
+        <p>Enter birthdate to get exact years, months and days.</p>
+      </div>
+      <div class="meta">
+        <span class="chip">Date</span>
+        <small>Accurate</small>
+      </div>
+    </article>
+
+    <article class="card">
+      <div>
+        <h3>Unit Converter</h3>
+        <p>cm ↔ in, kg ↔ lb, °C ↔ °F — quick conversions.</p>
+      </div>
+      <div class="meta">
+        <span class="chip">Units</span>
+        <small>Fast</small>
+      </div>
+    </article>
+
+    <article class="card">
+      <div>
+        <h3>Currency Converter</h3>
+        <p>Static rates or connect to live API for up-to-date rates.</p>
+      </div>
+      <div class="meta">
+        <span class="chip">Finance</span>
+        <small>Live/Static</small>
+      </div>
+    </article>
+
+    <article class="card">
+      <div>
+        <h3>Loan / EMI Calculator</h3>
+        <p>Compute monthly EMI from amount, rate and tenure.</p>
+      </div>
+      <div class="meta">
+        <span class="chip">Loan</span>
+        <small>EMI</small>
+      </div>
+    </article>
+
+    <article class="card">
+      <div>
+        <h3>Savings Calculator</h3>
+        <p>Principal + rate + time → final amount (simple/compound).</p>
+      </div>
+      <div class="meta">
+        <span class="chip">Savings</span>
+        <small>Goal</small>
+      </div>
+    </article>
+  </section>
+
+</body>
+</html>

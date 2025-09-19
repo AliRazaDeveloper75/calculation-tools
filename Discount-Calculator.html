@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discount Price Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .description {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        label {
+            font-weight: 500;
+            color: #444;
+            font-size: 16px;
+        }
+        
+        input {
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #ff6b6b;
+            outline: none;
+        }
+        
+        .discount-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .discount-option {
+            padding: 12px;
+            text-align: center;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .discount-option:hover {
+            background-color: #e9ecef;
+        }
+        
+        .discount-option.active {
+            background-color: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .calculate-btn {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
+        .calculate-btn:hover {
+            background-color: #ff5252;
+            transform: translateY(-2px);
+        }
+        
+        .clear-btn {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .clear-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .results {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .result-value {
+            font-weight: 600;
+            color: #ff6b6b;
+        }
+        
+        .final-price {
+            background-color: #ff6b6b;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .final-price .result-value {
+            color: white;
+            font-size: 18px;
+        }
+        
+        .savings {
+            background-color: #d5f5e3;
+            color: #27ae60;
+            font-weight: 600;
+        }
+        
+        .savings .result-value {
+            color: #27ae60;
+        }
+        
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .discount-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Discount Price Calculator</h1>
+        <p class="description">Calculate the final price after discount and see how much you save</p>
+        
+        <div class="calculator">
+            <div class="input-group">
+                <label for="original-price">Original Price ($)</label>
+                <input type="number" id="original-price" placeholder="Enter original price" min="0" step="0.01">
+            </div>
+            
+            <div class="input-group">
+                <label for="discount-percentage">Discount Percentage</label>
+                <input type="number" id="discount-percentage" placeholder="Enter discount percentage" min="0" max="100" value="20">
+                
+                <div class="discount-options">
+                    <div class="discount-option" data-value="10">10%</div>
+                    <div class="discount-option active" data-value="20">20%</div>
+                    <div class="discount-option" data-value="25">25%</div>
+                    <div class="discount-option" data-value="30">30%</div>
+                    <div class="discount-option" data-value="50">50%</div>
+                    <div class="discount-option" data-value="0">No Discount</div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="calculate-btn" onclick="calculateDiscount()">Calculate Discount</button>
+                <button class="clear-btn" onclick="clearFields()">Clear</button>
+            </div>
+            
+            <div class="results">
+                <div class="result-item">
+                    <span>Original Price:</span>
+                    <span class="result-value" id="original-price-display">$0.00</span>
+                </div>
+                <div class="result-item">
+                    <span>Discount Amount:</span>
+                    <span class="result-value" id="discount-amount">$0.00</span>
+                </div>
+                <div class="result-item final-price">
+                    <span>Final Price:</span>
+                    <span class="result-value" id="final-price">$0.00</span>
+                </div>
+                <div class="result-item savings">
+                    <span>You Save:</span>
+                    <span class="result-value" id="savings">$0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set up discount option selection
+        document.querySelectorAll('.discount-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.discount-option').forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('discount-percentage').value = this.getAttribute('data-value');
+                calculateDiscount();
+            });
+        });
+        
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2
+            }).format(amount);
+        }
+        
+        function calculateDiscount() {
+            const originalPrice = parseFloat(document.getElementById('original-price').value);
+            const discountPercentage = parseFloat(document.getElementById('discount-percentage').value);
+            
+            if (isNaN(originalPrice) || originalPrice <= 0) {
+                alert('Please enter a valid original price');
+                return;
+            }
+            
+            if (isNaN(discountPercentage) || discountPercentage < 0 || discountPercentage > 100) {
+                alert('Please enter a valid discount percentage between 0 and 100');
+                return;
+            }
+            
+            const discountAmount = (originalPrice * discountPercentage) / 100;
+            const finalPrice = originalPrice - discountAmount;
+            
+            // Update results
+            document.getElementById('original-price-display').textContent = formatCurrency(originalPrice);
+            document.getElementById('discount-amount').textContent = formatCurrency(discountAmount);
+            document.getElementById('final-price').textContent = formatCurrency(finalPrice);
+            document.getElementById('savings').textContent = formatCurrency(discountAmount);
+        }
+        
+        function clearFields() {
+            document.getElementById('original-price').value = '';
+            document.getElementById('discount-percentage').value = '20';
+            
+            document.querySelectorAll('.discount-option').forEach(opt => opt.classList.remove('active'));
+            document.querySelector('.discount-option[data-value="20"]').classList.add('active');
+            
+            document.getElementById('original-price-display').textContent = '$0.00';
+            document.getElementById('discount-amount').textContent = '$0.00';
+            document.getElementById('final-price').textContent = '$0.00';
+            document.getElementById('savings').textContent = '$0.00';
+        }
+        
+        // Calculate when discount percentage is manually changed
+        document.getElementById('discount-percentage').addEventListener('input', function() {
+            // Update active discount option if value matches
+            const value = this.value;
+            let optionFound = false;
+            
+            document.querySelectorAll('.discount-option').forEach(option => {
+                if (option.getAttribute('data-value') === value) {
+                    document.querySelectorAll('.discount-option').forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    optionFound = true;
+                }
+            });
+            
+            // If no matching option, remove all active states
+            if (!optionFound) {
+                document.querySelectorAll('.discount-option').forEach(opt => opt.classList.remove('active'));
+            }
+            
+            calculateDiscount();
+        });
+        
+        // Calculate when original price is entered
+        document.getElementById('original-price').addEventListener('input', calculateDiscount);
+        
+        // Allow pressing Enter to calculate
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calculateDiscount();
+            }
+        });
+    </script>
+</body>
+</html>
