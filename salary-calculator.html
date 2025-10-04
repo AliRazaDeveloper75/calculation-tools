@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Percentage Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        
+        .calculator-type {
+            display: flex;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #3498db;
+        }
+        
+        .calc-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background-color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .calc-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .calc-btn:not(.active):hover {
+            background-color: #f8fafc;
+        }
+        
+        .calculator {
+            display: none;
+        }
+        
+        .calculator.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+        
+        .result.active {
+            display: block;
+        }
+        
+        .result h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .result-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #27ae60;
+            margin: 10px 0;
+        }
+        
+        .result-details {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .formula {
+            background-color: #f1f8ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Salary Percentage Calculator</h1>
+        <p class="description">Calculate salary increases or percentage changes</p>
+        
+        <div class="calculator-type">
+            <button class="calc-btn active" id="calcNewSalary">Calculate New Salary</button>
+            <button class="calc-btn" id="calcPercentage">Calculate Percentage</button>
+        </div>
+        
+        <div class="calculator active" id="newSalaryCalc">
+            <div class="input-group">
+                <label for="currentSalary">Current Salary ($)</label>
+                <input type="number" id="currentSalary" placeholder="Enter current salary" min="0" step="0.01">
+            </div>
+            
+            <div class="input-group">
+                <label for="increasePercentage">Increase Percentage (%)</label>
+                <input type="number" id="increasePercentage" placeholder="Enter percentage increase" min="0" step="0.01">
+            </div>
+            
+            <button class="btn" id="calculateNewSalary">Calculate New Salary</button>
+            
+            <div class="formula">
+                <strong>Formula:</strong> New Salary = Current Salary × (1 + Increase Percentage / 100)
+            </div>
+            
+            <div class="result" id="newSalaryResult">
+                <h3>Calculation Result</h3>
+                <div class="result-value" id="newSalaryValue">$0.00</div>
+                <div class="result-details" id="newSalaryDetails"></div>
+            </div>
+        </div>
+        
+        <div class="calculator" id="percentageCalc">
+            <div class="input-group">
+                <label for="previousSalary">Previous Salary ($)</label>
+                <input type="number" id="previousSalary" placeholder="Enter previous salary" min="0" step="0.01">
+            </div>
+            
+            <div class="input-group">
+                <label for="newSalary">New Salary ($)</label>
+                <input type="number" id="newSalary" placeholder="Enter new salary" min="0" step="0.01">
+            </div>
+            
+            <button class="btn" id="calculatePercentage">Calculate Percentage</button>
+            
+            <div class="formula">
+                <strong>Formula:</strong> Percentage Increase = ((New Salary - Previous Salary) / Previous Salary) × 100
+            </div>
+            
+            <div class="result" id="percentageResult">
+                <h3>Calculation Result</h3>
+                <div class="result-value" id="percentageValue">0%</div>
+                <div class="result-details" id="percentageDetails"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const calcNewSalaryBtn = document.getElementById('calcNewSalary');
+        const calcPercentageBtn = document.getElementById('calcPercentage');
+        const newSalaryCalc = document.getElementById('newSalaryCalc');
+        const percentageCalc = document.getElementById('percentageCalc');
+        
+        const currentSalaryInput = document.getElementById('currentSalary');
+        const increasePercentageInput = document.getElementById('increasePercentage');
+        const calculateNewSalaryBtn = document.getElementById('calculateNewSalary');
+        const newSalaryResult = document.getElementById('newSalaryResult');
+        const newSalaryValue = document.getElementById('newSalaryValue');
+        const newSalaryDetails = document.getElementById('newSalaryDetails');
+        
+        const previousSalaryInput = document.getElementById('previousSalary');
+        const newSalaryInput = document.getElementById('newSalary');
+        const calculatePercentageBtn = document.getElementById('calculatePercentage');
+        const percentageResult = document.getElementById('percentageResult');
+        const percentageValue = document.getElementById('percentageValue');
+        const percentageDetails = document.getElementById('percentageDetails');
+        
+        // Event Listeners
+        calcNewSalaryBtn.addEventListener('click', () => switchCalculator('newSalary'));
+        calcPercentageBtn.addEventListener('click', () => switchCalculator('percentage'));
+        
+        calculateNewSalaryBtn.addEventListener('click', calculateNewSalary);
+        calculatePercentageBtn.addEventListener('click', calculatePercentage);
+        
+        // Functions
+        function switchCalculator(type) {
+            if (type === 'newSalary') {
+                calcNewSalaryBtn.classList.add('active');
+                calcPercentageBtn.classList.remove('active');
+                newSalaryCalc.classList.add('active');
+                percentageCalc.classList.remove('active');
+            } else {
+                calcNewSalaryBtn.classList.remove('active');
+                calcPercentageBtn.classList.add('active');
+                newSalaryCalc.classList.remove('active');
+                percentageCalc.classList.add('active');
+            }
+            
+            // Clear results when switching
+            newSalaryResult.classList.remove('active');
+            percentageResult.classList.remove('active');
+        }
+        
+        function calculateNewSalary() {
+            const currentSalary = parseFloat(currentSalaryInput.value);
+            const increasePercentage = parseFloat(increasePercentageInput.value);
+            
+            if (isNaN(currentSalary) || isNaN(increasePercentage)) {
+                alert('Please enter valid numbers for both fields.');
+                return;
+            }
+            
+            if (currentSalary < 0 || increasePercentage < 0) {
+                alert('Please enter positive values.');
+                return;
+            }
+            
+            const increaseAmount = currentSalary * (increasePercentage / 100);
+            const newSalary = currentSalary + increaseAmount;
+            
+            // Format numbers with commas
+            const formattedCurrent = formatNumber(currentSalary);
+            const formattedIncrease = formatNumber(increaseAmount);
+            const formattedNew = formatNumber(newSalary);
+            
+            // Display results
+            newSalaryValue.textContent = `$${formattedNew}`;
+            newSalaryDetails.innerHTML = `
+                Current Salary: $${formattedCurrent}<br>
+                Increase Amount: $${formattedIncrease}<br>
+                Increase Percentage: ${increasePercentage.toFixed(2)}%
+            `;
+            
+            newSalaryResult.classList.add('active');
+        }
+        
+        function calculatePercentage() {
+            const previousSalary = parseFloat(previousSalaryInput.value);
+            const newSalary = parseFloat(newSalaryInput.value);
+            
+            if (isNaN(previousSalary) || isNaN(newSalary)) {
+                alert('Please enter valid numbers for both fields.');
+                return;
+            }
+            
+            if (previousSalary <= 0) {
+                alert('Previous salary must be greater than zero.');
+                return;
+            }
+            
+            const increaseAmount = newSalary - previousSalary;
+            const percentageIncrease = (increaseAmount / previousSalary) * 100;
+            
+            // Format numbers with commas
+            const formattedPrevious = formatNumber(previousSalary);
+            const formattedNew = formatNumber(newSalary);
+            const formattedIncrease = formatNumber(Math.abs(increaseAmount));
+            
+            // Display results
+            if (increaseAmount >= 0) {
+                percentageValue.textContent = `${percentageIncrease.toFixed(2)}% Increase`;
+                percentageValue.style.color = '#27ae60';
+                percentageDetails.innerHTML = `
+                    Previous Salary: $${formattedPrevious}<br>
+                    New Salary: $${formattedNew}<br>
+                    Increase Amount: $${formattedIncrease}
+                `;
+            } else {
+                percentageValue.textContent = `${Math.abs(percentageIncrease).toFixed(2)}% Decrease`;
+                percentageValue.style.color = '#e74c3c';
+                percentageDetails.innerHTML = `
+                    Previous Salary: $${formattedPrevious}<br>
+                    New Salary: $${formattedNew}<br>
+                    Decrease Amount: $${formattedIncrease}
+                `;
+            }
+            
+            percentageResult.classList.add('active');
+        }
+        
+        function formatNumber(num) {
+            return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+    </script>
+</body>
+</html>
